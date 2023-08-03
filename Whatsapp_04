@@ -1,0 +1,33 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Device serial number of the sender device
+sender_device_serial = 'cf611ff9'  # Use the actual sender device serial number as a string
+
+# Create a Device object for the sender device
+sender_device = ui2.connect(sender_device_serial)
+
+# Create a Device object for the receiver device
+receiver_device = ui2.connect(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '26']
+
+receiver_device.swipe(900, 500, 100, 500, duration=0.5)
+time.sleep(2)
+receiver_device(text="WhatsApp").long_click()
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.android.launcher3:id/popup_container"]/android.widget.FrameLayout[4]').click()
+time.sleep(2)
+print("uninstall done for python")
