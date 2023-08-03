@@ -1,0 +1,44 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Device serial number of the sender device
+sender_device_serial = 'cf611ff9'  # Use the actual sender device serial number as a string
+
+# Create a Device object for the sender device
+sender_device = ui2.connect(sender_device_serial)
+
+# Create a Device object for the receiver device
+receiver_device = ui2.connect(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '26']
+
+receiver_device(text="Play Store").click()
+time.sleep(2)
+receiver_device(text="Search Apps & Games").set_text("whatsapp")
+time.sleep(2)
+receiver_device.xpath('//androidx.compose.ui.platform.ComposeView/android.view.View[1]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[2]').click()
+time.sleep(2)
+receiver_device(description="Install").click()
+
+
+# Define the package name and activity name of WhatsApp
+package_name = "com.whatsapp"
+activity_name = "com.whatsapp.HomeActivity"
+
+# ADB command to start WhatsApp
+whatsapp_adb_command = ["adb", "-s", receiver_device_serial, "shell", "am", "start", "-n", f"{package_name}/{activity_name}"]
+
+# Execute the ADB command to start WhatsApp
+subprocess.run(whatsapp_adb_command)
