@@ -1,0 +1,66 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Device serial number of the sender device
+sender_device_serial = 'cf611ff9'  # Use the actual sender device serial number as a string
+
+# Create a Device object for the sender device
+sender_device = ui2.connect(sender_device_serial)
+
+# Create a Device object for the receiver device
+receiver_device = ui2.connect(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '26']
+
+# Get the screen dimensions
+screen_width, screen_height = receiver_device.window_size()
+
+# Calculate the coordinates for the swipe left gesture
+start_x = screen_width - 50
+start_y = screen_height // 2
+end_x = 50
+end_y = start_y
+
+# Perform the swipe left gesture
+receiver_device.swipe(start_x, start_y, end_x, end_y, duration=0.5)  # Adjust duration (in seconds) as needed
+
+# Wait for a brief moment to see the result (optional)
+time.sleep(1)
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+receiver_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/conversations_row_contact_name").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/menuitem_overflow").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/conversations_row_contact_name").click()
+time.sleep(2)
+receiver_device(description="Voice call").click()
+time.sleep(2)
+receiver_device(resourceId="android:id/button1").click()
+time.sleep(2)
+receiver_device(resourceId="com.android.systemui:id/back").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/input_attach_button").click()
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.whatsapp:id/pickfiletype_location_holder"]/android.widget.ImageButton[1]').click()
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.whatsapp:id/send_current_location_btn"]/android.widget.LinearLayout[1]').click()
+print("The current location with voice call sent")
