@@ -1,0 +1,56 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Create a Device object for the sender device
+sender_device = ui2.Device('cf611ff9')
+
+# Create a Device object for the receiver device
+receiver_device = ui2.Device(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '26']
+def scroll_to_element(self, element_name):
+        adb_command = ['adb', '-s', self.serial, 'shell', 'input', 'touchscreen', 'swipe', 'start_x', 'start_y', 'end_x', 'end_y']
+        subprocess.run(adb_command)
+        
+receiver_device.long_click(0.767, 0.895)
+time.sleep(2)
+receiver_device(text="Widgets").click()
+time.sleep(2)
+
+# Scroll down to the WhatsApp widget
+receiver_device(scrollable=True).scroll(steps=10)
+
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.android.launcher3:id/primary_widgets_list_view"]/android.widget.LinearLayout[6]/android.widget.CheckBox[1]').click()
+time.sleep(2)
+# Find the WhatsApp widget by its resource ID (replace with the actual ID)
+widget = receiver_device(resourceId="com.android.launcher3:id/widget_preview_container")
+widget_bounds = widget.info["bounds"]
+
+# Define the target position on the home screen (adjust as needed)
+end_x = 0.441  # X-coordinate on the home screen
+end_y = 0.498  # Y-coordinate on the home screen
+
+# Drag the widget to the target position
+receiver_device.drag(widget_bounds["left"], widget_bounds["top"],
+                     end_x, end_y, duration=0.5)
+
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.whatsapp:id/header"]/android.widget.LinearLayout[1]').click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/conversations_row_contact_name").click()
+time.sleep(2)
+receiver_device(description="Video call").click()
+time.sleep(20)
+print("The video call is going while whatsapp is in wiglet state")
