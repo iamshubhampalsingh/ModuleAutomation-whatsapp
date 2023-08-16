@@ -1,0 +1,63 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Device serial number of the sender device
+sender_device_serial = 'cf611ff9'  # Use the actual sender device serial number as a string
+
+# Create a Device object for the sender device
+sender_device = ui2.connect(sender_device_serial)
+
+# Create a Device object for the receiver device
+receiver_device = ui2.connect(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '26']
+
+# ADB command to turn off the receiver device screen
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+
+# Execute the ADB command to turn off the receiver device screen
+subprocess.run(receiver_turn_off_command)
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+
+# Start WhatsApp using the package name and activity name
+sender_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+sender_device(resourceId="com.whatsapp:id/conversations_row_contact_name").click()
+time.sleep(2)
+sender_device(resourceId="com.whatsapp:id/conversations_row_contact_name", text="AAAAA").click()
+time.sleep(2)
+sender_device(description="Video call").click()
+time.sleep(30)
+receiver_device(resourceId="android:id/action0", text="ANSWER").click()
+time.sleep(2)
+receiver_device(resourceId="com.android.systemui:id/back").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/entry").set_text("hello this is shu bham pal singh, automation engineer at LavaR&D")
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/conversation_entry_action_button").click()
+print("The video call ongoing with messages sent")
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/input_attach_button").click()
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.whatsapp:id/pickfiletype_document_holder"]/android.widget.ImageButton[1]').click()
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="android:id/list"]/android.widget.FrameLayout[2]').click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/send").click()
+print("Documents in pdf format sent")
