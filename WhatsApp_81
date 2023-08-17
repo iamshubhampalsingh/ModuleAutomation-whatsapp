@@ -1,0 +1,73 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Create a Device object for the sender device
+sender_device = ui2.Device('cf611ff9')
+
+# Create a Device object for the receiver device
+receiver_device = ui2.Device(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '26']
+
+# Turn off the receiver device screen
+receiver_device.turn_off_screen()
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+
+# Start WhatsApp using the package name and activity name
+sender_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+
+receiver_device(text="Shubham").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/entry").set_text("hello")
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/conversation_entry_action_button").click()
+time.sleep(2)
+# Define the initial swipe coordinates
+start_x = 500
+start_y = 500
+end_y = 1500
+swipe_duration = 0.5
+
+# Perform multiple swipes to scroll the screen downwards
+num_swipes = 5
+for _ in range(num_swipes):
+    sender_device.swipe(start_x, start_y, start_x, end_y, duration=swipe_duration)
+    time.sleep(1)
+
+# Click on the Bluetooth tile in the system UI
+sender_device(resourceId="com.android.systemui:id/tile_label", text="Bluetooth").click()
+time.sleep(2)
+
+# Long-click on the Bluetooth tile
+sender_device(resourceId="com.android.systemui:id/tile_label", text="Bluetooth").long_click()
+time.sleep(2)
+
+# Click on the "Pair new device" option
+sender_device(resourceId="android:id/title", text="Pair new device").click()
+
+# Check for the presence of a specific device ("OnePlus 9 Pro 5G") and initiate the pairing process
+num_swipes = 100
+for _ in range(num_swipes):
+    if sender_device(resourceId="android:id/title", text="OnePlus 9 Pro 5G").exists():
+        sender_device(resourceId="android:id/title", text="OnePlus 9 Pro 5G").click()
+        time.sleep(1)
+        sender_deviced(resourceId="android:id/button2").click()
+        print("Bluetooth not paired")
+        break
+    else:
+        print("Bluetooth paired")
