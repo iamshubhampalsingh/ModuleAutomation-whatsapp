@@ -1,0 +1,61 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+from datetime import datetime, timedelta
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Device serial number of the sender device
+sender_device_serial = 'cf611ff9'  # Use the actual sender device serial number as a string
+
+# Create a Device object for the sender device
+sender_device = ui2.connect(sender_device_serial)
+
+# Create a Device object for the receiver device
+receiver_device = ui2.connect(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', sender_device_serial, 'shell', 'input', 'keyevent', '26']
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+receiver_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+
+# Start WhatsApp using the package name and activity name
+sender_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+
+# Device serial number
+device_serial = "192.168.2.39:5555"
+
+# Create a Device object
+device = ui2.Device(device_serial)
+
+# ADB command to get battery status
+battery_info_command = ['adb', '-s', device_serial, 'shell', 'dumpsys', 'battery']
+
+# Execute the battery info command
+battery_info = subprocess.check_output(battery_info_command).decode('utf-8')
+
+# Extract battery percentage from the battery info
+battery_percentage = int(battery_info.split("level: ")[1].split()[0])
+
+# Check if battery percentage is less than 15
+if battery_percentage < 15:
+    print("Low battery")
+else:
+    print("Battery percentage is good")
+
+# Print the actual battery percentage
+print(f"Battery percentage: {battery_percentage}%")
