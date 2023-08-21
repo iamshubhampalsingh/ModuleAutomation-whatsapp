@@ -1,0 +1,38 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Create a Device object for the sender device
+sender_device = ui2.Device('cf611ff9')
+
+# Create a Device object for the receiver device
+receiver_device = ui2.Device(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '26']
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+receiver_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+
+# ADB commands to increase and decrease volume
+receiver_volume_up_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '24']
+receiver_volume_down_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '25']
+
+# Simulate volume increase and decrease
+receiver_device.press("volume_up")  # Using uiautomator2 method to simulate volume up button press
+time.sleep(1)
+receiver_device.press("volume_down")  # Using uiautomator2 method to simulate volume down button press
