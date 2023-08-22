@@ -1,0 +1,49 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Create a Device object for the sender device
+sender_device = ui2.Device('cf611ff9')
+
+# Create a Device object for the receiver device
+receiver_device = ui2.Device(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '26']
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+receiver_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+receiver_device.xpath('//*[@resource-id="com.whatsapp:id/conversations_row_header"]/android.widget.FrameLayout[1]').click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/entry").set_text("hello this is shubham pal singh")
+time.sleep(2)
+print("The whatsapp chatting is happening")
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+reciever_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+
+reciever_device(resourceId="com.whatsapp:id/conversations_row_contact_name").click()
+time.sleep(2)
+reciever_device(description="Video call").click()
+time.sleep(2)
+reciever_device(resourceId="com.whatsapp:id/entry").set_text("hello world")
+time.sleep(2)
+print("The message is sent with video call")
