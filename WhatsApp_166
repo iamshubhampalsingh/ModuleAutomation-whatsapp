@@ -1,0 +1,66 @@
+# Import necessary modules
+import uiautomator2 as ui2
+import time
+import subprocess
+
+# Device serial number of the receiver device
+receiver_device_serial = "192.168.2.39:5555"
+
+# Create a Device object for the sender device
+sender_device = ui2.Device('cf611ff9')
+
+# Create a Device object for the receiver device
+receiver_device = ui2.Device(receiver_device_serial)
+
+# ADB commands to turn on the receiver and sender devices' screens
+receiver_turn_on_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '224']
+sender_turn_on_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '224']
+
+# ADB commands to turn off the receiver and sender devices' screens
+receiver_turn_off_command = ['adb', '-s', receiver_device_serial, 'shell', 'input', 'keyevent', '26']
+sender_turn_off_command = ['adb', '-s', 'cf611ff9', 'shell', 'input', 'keyevent', '26']
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+receiver_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/fabText").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/menuitem_search").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/search_src_text").set_text("Shubham")
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/contactpicker_row_name", text="Shubham pal Singh").click()
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/entry").set_text("hello this is shubham pal singh")
+time.sleep(2)
+receiver_device(resourceId="com.whatsapp:id/conversation_entry_action_button").click()
+time.sleep(2)
+print(Whatsapp with bluetooth created)
+
+# Package name and activity name of WhatsApp
+whatsapp_package_name = "com.whatsapp"
+whatsapp_activity_name = "com.whatsapp.Main"
+
+# Start WhatsApp using the package name and activity name
+sender_device.app_start(whatsapp_package_name, whatsapp_activity_name)
+time.sleep(2)
+sender_device(resourceId="com.whatsapp:id/fabText").click()
+time.sleep(2)
+sender_device(resourceId="com.whatsapp:id/contactpicker_row_name", text="AAAAA (You)").click()
+time.sleep(2)
+sender_device(description="Video call").click()
+time.sleep(2)
+sender_device(resourceId="android:id/button1").click()
+time.sleep(2)
+sender_device(resourceId="com.whatsapp:id/submit").click()
+time.sleep(2)
+sender_device(resourceId="com.android.permissioncontroller:id/permission_allow_foreground_only_button").click()
+time.sleep(2)
+sender_device(resourceId="com.android.permissioncontroller:id/permission_allow_foreground_only_button").click()
+time.sleep(2)
+sender_device(resourceId="android:id/action0", text="DECLINE").click()
+print("The video call is declined")
